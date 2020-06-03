@@ -1,0 +1,33 @@
+Intuitively, a Pub/Sub system has two components: publisher and subscriber. If a publisher knows what clients are its subscribers, messages will be delivered as requested. However, such design could be troublesome once the number of publishers and subscribers increases, total numbers of connection between publishers and subscribers increases exponentially, which would make the system highly coupled and barely manageable. To resolve the concern, broker, a middleware to decouple relations between publishers and subscribers, is introduced to the system.
+	
+	\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto]
+		\node[state] (0) {Publisher};
+		\node[state] (1) [above right=of 0]{Broker};
+		\node[state] (2) [below right=of 1]{Subscriber};
+		\path[->]
+			(0) edge node {Publish} (1)
+			(1) edge [bend left=15, dashed] node {Stream} (2)
+			(2) edge [bend left=15] node {Subscribe} (1);
+	\end{tikzpicture}
+	\caption{Pub/Sub System Logical Model}
+	\end{figure}
+
+As the figure has shown, with broker in place, publisher and subscribers would only keep track of where the broker is and describe the action it wants to perform to it. The Pub/Sub service designed and implemented in this research serves as the broker in the logic model. It offers the following 2 APIs:
+
+\begin{itemize}
+  \item \textbf{Publish}: A client publishes a message of a certain topic to the broker, then the broker will tell the publisher whether the push is completed.
+  \item \textbf{Subscribe}: Clients subscribe to topics from the broker, then the broker will push streams of messages under the requested topics to the subscribers.
+\end{itemize}
+
+Researchers started off with a primitive monolithic gRPC\citep{grpc} implementation of Pub/Sub on a single machine. Using it as a foundation, the developers then designed sidecar services to assist replication along with single-machine server. For different use cases, Pub/Sub service is implemented to scale up in the following modes:
+
+\begin{itemize}
+  \item Master-slave
+  \item Leader election using Raft\citep{raft}
+\end{itemize}
+
+For each replication mode researchers applied multiple rounds of simulation and load testing using docker-compose\citep{docker-compose}. Each node in the cluster restricted to use 0.5 unit of CPU and 2GB of memory, the cluster is incrementally loaded to host 2000 clients simultaneously, and finally each client is supposed to receive around 20 messages each round and it is supposed to finish receiving all the messages within 1 second. 
+
+The goal of this project is to compare how different replication schemes affects the performance of a distributed Pub/Sub system; hence, for simplicity all implementation only handles storage at memory level, no data is persisted any time in the lifecycle of a server process.
