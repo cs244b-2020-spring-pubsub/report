@@ -1,0 +1,9 @@
+The single machine implementation uses a thread-safe map internally to manage topics and subscribers. Each subscriber is put into its own thread\footnote{Service is implemented in Go\citep{golang}, where a thread is a go-routine.}. Every time a message is published, broker will first deliver the message to the subscriber threads of the message topic, and thereafter the message will be transported to clients in each thread. Figure 2 demonstrates the performance of a single-machine service throughout load-testing.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.33]{figure/single_machine/performance.png}
+	\caption{Single-Machine Performance}
+\end{figure}
+
+In average a single-machine service could finish a round of messages within 50 milliseconds. Several clients were blocked in the process and timed out; one possible reason could be that there is only one simulation process, so the client threads were locked, or maybe neglected, during user context switching. The issue should be negligible since the overall time-out rate is less than 0.5\%. The researchers later applied load-testing using the same setup to find out the maximum capacity of this implementation, and statistics showed that such a service could be handle 20000 clients with roughly 3\% timeout rate.

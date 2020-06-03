@@ -1,0 +1,62 @@
+\documentclass[11pt,conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[english]{babel}
+\usepackage{float}
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[square,numbers]{natbib}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\pagenumbering{gobble}
+\bibliographystyle{plainnat}
+\def
+\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Publisher/Subscriber Service}
+
+\author{
+	\IEEEauthorblockN{Xiao Xin}
+	\IEEEauthorblockA{
+		\textit{Stanford University} \\
+		\textit{xxin@stanford.edu}
+	} \\
+	\and
+	\IEEEauthorblockN{Chi Zhang}
+	\IEEEauthorblockA{
+		\textit{Stanford University} \\
+		\textit{zcdirk@stanford.edu}
+	}
+}
+
+\maketitle
+
+\begin{abstract}
+\input{section/abstract.tex}
+\end{abstract}
+
+\section{Overview}
+\input{section/overview.tex}
+
+\section{Single-Machine}
+\input{section/single-machine.tex}
+	
+\section{Replication}
+\input{section/replication/introduction.tex}
+
+\subsection{Master-Slave}
+\input{section/replication/master-slave.tex}
+
+\subsection{Raft}
+\input{section/replication/raft.tex}
+
+\section{Conclusion}
+\input{section/conclusion.tex}
+
+\medskip
+\bibliography{references}
+
+\end{document}
