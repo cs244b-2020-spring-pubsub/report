@@ -1,4 +1,8 @@
-Raft mode provides a less performant yet more reliable replication scheme for Pub/Sub. In master-slave mode
+In master-slave mode, once one node fails, the failure would be cascaded all the way down to all of its slave-descendants. To resolve this concern, the Pub/Sub system must develop a way to find a replacement once its master went offline. Therefore, the researchers implemented a leader-election protocol on top of Pub/Sub system using Raft, which provides a less performant yet more reliable replication scheme for Pub/Sub. In this mode, all nodes are identified as \textbf{peer}, and the all could become the \textbf{leader} of the cluster once they win a majority of the ballots in leader election. The non-leader nodes are known as \textbf{follower}, and if they want to become the leader of the node they would first identity themselves as \textbf{candidate} to initiate an election. 
+
+Raft clusters operates similarly to master-slave mode: all nodes in the system can handle subscribe request independently, and all publish requests will have to go through the leader. But to confirm the publish operation, leader must go through the some extra process to make sure the write request is accepted by most of the followers. 
+
+The researchers organized a 4-node cluster for testing as figure 6. In additional to performance benchmarking, the researchers first applied a fault tolerance testing to validate leader-election by taking down a node in the cluster to see if the Pub/Sub system could still function. In most of the cases, leader nodes are taken down in order to observe how the cluster would re-elect a leader. All experiments suggests the leader re-elections were successful although some may cause significant latency during the process. Once the fault tolerance is confirmed to be successful, the researchers proceeded with performance benchmark.
 
 \begin{figure}[H]
 	\centering
@@ -40,6 +44,10 @@ Raft mode provides a less performant yet more reliable replication scheme for Pu
 	\includegraphics[scale=0.33]{figure/raft/response-latency.png}
 	\caption{Single-Machine/Raft average response latency}
 \end{figure}
+
+Same in master-slave mode, the clients were evenly distributed onto each node in the cluster. However while testing, the researchers found that the system would be frequently stalled due to Raft-related heartbeat and synchronization operations, if the size of test increment were small. This effect can be cancelled out by extending heartbeat interval, but doing so would make the system behaving more like master-slave mode. Overall, the researchers decided to resolve the issue by increasing the test sample size in aim to reduce the total number of test iterations and internal leader elections. 
+
+As the graph has shown, capacity-wise Raft-mode is still capable of hosting large number of clients. However, the average latency is over 50\% slower than that of a single machine, and timeout rate had also hiked.
 
 % TODO (zcdirk@)
 % Talk about optimization strategies in Raft implementation
