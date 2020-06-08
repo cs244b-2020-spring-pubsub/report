@@ -1,0 +1,8 @@
+Raft replication model has the following advantages over single machine model and master-slave model:
+
+\begin{itemize}
+  \item \textbf{Fault tolerant}: Single machine model cannot accept any crashes. Master slave machine can only accept slaves to crash. With Raft implementation, the service can still work fine as long as the majority of the nodes in the cluster are still alive. Also, after the crashed nodes recovered, they can catch up automatically and work as normal followers again.
+  \item \textbf{Auto scalable}: In Raft model, Pub/Sub service allows the users to add new nodes into the cluster without rebooting the ones that already started. As long as the new node knows all the addresses of the existing nodes, it will send out a vote request on initiation. If the existing nodes receives a request with a candidate id that it has never seen, it will reply the vote request with fail, and then start a new connection with this node. This is pretty handy for the users, as they can add any number of new nodes whenever they want.
+  \item \textbf{Log}: In single machine mode and master-slave mode, the messages are sent in the air, and will not be persisted in the log. While in Raft mode, as the leader needs to make sure all the followers are in the same state, nodes will persist all the message history in log. This makes it possible if the clients want to check the message history. Also, one more thing to point out here is after the crashed node recovers, it will catch up the logs and resend those messages the node received while it is down.
+\end{itemize}
+

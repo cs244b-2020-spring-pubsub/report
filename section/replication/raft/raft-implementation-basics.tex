@@ -1,0 +1,19 @@
+On initiation, all the nodes start with the role of Candidate, and then start the election process. Each node will sleep a random time to avoid leader election conflict and then send out a leader-vote request if no others have done so. The node then collect the ballots from all the other peers, and once the node received majority vote grants, it will upgrade itself to leader. Upon upgrading to leader, the leader will send out initial RPC requests to all the other nodes to let others know about the leader.
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto,state/.style={circle, draw, minimum size=2cm}]
+		\node[state] (0) {leader};
+		\node[state] (1) [node distance=3cm,right=of 0]{follower-1};
+		\node[state] (2) [node distance=3cm,below=of 0]{follower-2};
+		\node[state] (3) [node distance=3cm,right=of 2]{follower-3};
+		\path[->]
+			(0) edge node {} (1)
+			(0) edge node {} (2)
+			(0) edge node {} (3);
+	\end{tikzpicture}
+	\caption{Raft Cluster Topology}
+\end{figure}
+
+After leader election, Raft cluster will be in a state shows in figure 7. The cluster will operates similarly to master-slave mode: all nodes in the system can handle subscribe request independently, and all publish requests will have to go through the leader. But to confirm the publish operation, leader must go through the some extra process to make sure the write request is accepted by most of the followers. Also, the leader needs to send out heartbeat request to let all the followers know that the leader is still active.
+
