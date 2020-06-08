@@ -8,12 +8,20 @@
 \usepackage[utf8]{inputenc}
 \usepackage[square,numbers]{natbib}
 \usepackage{tikz}
+\usepackage{titlesec}
 \usetikzlibrary{automata,positioning}
 \pagenumbering{gobble}
 \bibliographystyle{plainnat}
 \def
 \BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\titleformat{\section}
+{\normalfont\Large\bfseries}{\arabic{section}.}{1em}{}
+\titleformat{\subsection}
+{\normalfont\large\bfseries}{\arabic{section}.\arabic{subsection}}{1em}{}
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}{1em}{}
+
 \begin{document}
 
 \title{Publisher/Subscriber Service}
@@ -51,7 +59,22 @@
 \input{section/replication/master-slave.tex}
 
 \subsection{Raft}
-\input{section/replication/raft.tex}
+\input{section/replication/raft/raft-overview.tex}
+
+\subsubsection{Implementation basics}
+\input{section/replication/raft/raft-implementation-basics.tex}
+
+\subsubsection{Advantages}
+\input{section/replication/raft/raft-advantages.tex}
+
+\subsubsection{Optimization}
+\input{section/replication/raft/raft-optimization.tex}
+
+\subsubsection{Performance}
+\input{section/replication/raft/raft-performance.tex}
+
+\subsubsection{Future work}
+\input{section/replication/raft/raft-future.tex}
 
 \section{Conclusion}
 \input{section/conclusion.tex}
