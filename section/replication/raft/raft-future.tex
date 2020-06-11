@@ -1,7 +1,0 @@
-There are also a few features proposed but not yet implemented due to time constraints. The researchers plan to leave them for future implementations:
-
-\begin{itemize}
-    \item \textbf{Authentication checking}: Currently, the implementation only allow one time subscribe, and the user don't need to provide any identification information. In the future, we may consider to add authentication checking in the service. Before subscriber subscribe a topic, the identification information is checked and the publisher may decide to publish the message to specific subset of subscribers that should have the permission to the message.
-    \item \textbf{Client revive}: In current version, if a client lost connection with the server, it will miss the message in the meantime and have no way to retrieve those messages. After authentication checking is implemented, we may consider to store the last reply from the subscriber, and retry sending the messages after the subscriber lost connection. If the subscriber login again with the same account, then it should first received all the messages during the time that it is offline.
-    \item \textbf{Message history query}: It will be handy if the subscribers can check all the message history based on the timestamp and topic. So that the client will not need to implement a client side log if they do need the history. We may also consider to implement this functionality.
-\end{itemize}
